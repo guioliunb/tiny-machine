@@ -1,39 +1,22 @@
+/* Analisador Lexico */
 %{
-#include "sintatico_tab.h"
+#include "sintatico.tab.h"
 %}
-
-comment \/\/.*\n
-id	[a-zA-Z_][a-zA-Z_0-9]*\n
-int [+-]?[0-9]+\n
-float [+-]?([0-9]+\.[0-9]*|\.[0-9]+)\n
-%x C_COMMENT
-
-/**/
-outro	.*
-
 %%
-"/*".*         		{ BEGIN(C_COMMENT); }
-<C_COMMENT>"*/" 	{ BEGIN(INITIAL); printf("; comentarios multilinha\n");}
-<C_COMMENT>\n   	{ }
-<C_COMMENT>.    	{ }
 
+"+"    { return PLUS; }
+"-"    { return MINUS; }
+"*"    { return TIMES; }
+"/"    { return DIVIDE; }
+main		{return MAIN;}
+var		{return VAR;}
+inteiro		{return INTEIRO;}
 escreva		{return ESCREVA;}
-{comment} 			{printf("comentario. Proximo token: \n");}
-{id}				{printf("Identificador. Proximo token: \n");}
-{int}				{printf("Inteiro. Proximo token: \n");}
-{float}				{printf("Float. Proximo token: \n");}
 [0-9]+		{yylval.inteiro = atoi(yytext); return NUM;}
+[a-zA-Z][a-zA-Z0-9]*	{yylval.cadeia= (char *) strdup(yytext); return ID;}
 [ \t\n]+	{;}
-[ \n\r\t] 			{  }
 .		{return yytext[0];}
-
 %%
-/* recomendavel declarar sempre funcao yywrap() */
-int yywrap ();
-
-/* programa principal */
-
-// Retorna 1 quando chegar EOF
 int yywrap() {
-	return 1;
+  return 1;
 }

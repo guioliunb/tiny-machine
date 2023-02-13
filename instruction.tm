@@ -1,5 +1,4 @@
-  0:     LD  6,0(0) 
-  1:     ST  0,0(0) 
-  2:    LDC  0,45(0) 
-  3:    OUT  0,0,0 
-  4:   HALT  0,0,0 
+
+Sintaxe ok.
+
+Semantica ok: se variaveis usadas, elas foram declaradas ok.
