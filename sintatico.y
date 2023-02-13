@@ -97,7 +97,15 @@ cmd_atribuicao: ID '=' exp
 	}
 ;
 exp:		
-	NUM
+	exp exp PLUS { $$=$1+$2; 	
+	  printf("Está somando\n")
+	  //corrigir tabela de simbolo para array estatico
+	  emitRM("ADD",ac,$1,$2,"add numbers");
+	}
+	| exp exp MINUS { $$=$1-$2; }
+	| exp exp TIMES { $$=$1*$2; }
+	| exp exp DIVIDE { $$=$1/$2; }
+	| NUM
 	{
 		emitRM("LDC",ac,$1,0,"carrega constante em ac");
 		$$ = $1;
@@ -110,12 +118,10 @@ exp:
 		} else {
 		  locMemId = recuperaLocMemId($1);
 		  emitRM("LD",ac,locMemId,gp,"carrega valor de id em ac");
+		  $$ = locMemId;
 		}
 	}
-	| exp exp PLUS { $$=$1+$2; }
-//	| exp exp MINUS { $$=$1-$2; }
-//	| exp exp TIMES { $$=$1*$2; }
-//	| exp exp DIVIDE { $$=$1/$2; }
+	
 ;
 %%
 // SEMANTICO
