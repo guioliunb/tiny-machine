@@ -1,1 +1,1 @@
-var a , b : inteiro  ; { a = 2 ; b = 50; escreva (a b +); }
+var a , b : inteiro  ; { a = 2 ; b = 50; escreva (40 2/); }

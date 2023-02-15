@@ -45,16 +45,20 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    VAR = 258,
-    INTEIRO = 259,
-    ESCREVA = 260,
-    MAIN = 261,
-    NUM = 262,
-    PLUS = 263,
-    MINUS = 264,
-    TIMES = 265,
-    DIVIDE = 266,
-    ID = 267
+    READ = 258,
+    WRITE = 259,
+    DO = 260,
+    WHILE = 261,
+    RETURN = 262,
+    QUIT = 263,
+    GT = 264,
+    GE = 265,
+    LT = 266,
+    LE = 267,
+    NE = 268,
+    EQ = 269,
+    ID = 270,
+    NUM = 271
   };
 #endif
 
@@ -63,12 +67,12 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 40 "sintatico.y" /* yacc.c:1909  */
+#line 45 "sintatico.y" /* yacc.c:1909  */
 
 	int inteiro;
 	char *cadeia;
 
-#line 72 "sintatico.tab.h" /* yacc.c:1909  */
+#line 76 "sintatico.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

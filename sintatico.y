@@ -1,4 +1,5 @@
-/* gera codigo para cmd de saida com constante numerica inteira */
+%defines "sintatico.tab.h"
+%output  "sintatico.tab.c"
 %{
 #include <stdio.h>
 #include "code.h"
@@ -17,6 +18,7 @@ struct regTabSimb {
 	int locMem;
 	struct regTabSimb *prox; /* ponteiro */
 };
+
 typedef struct regTabSimb regTabSimb;
 regTabSimb *tabSimb = (regTabSimb *)0;
 regTabSimb *colocaSimb();
@@ -30,6 +32,7 @@ int locMemId = 0; /* para recuperacao na TS */
 
 /* TM location number for current instruction emission */
 static int emitLoc = 0 ;
+static int proxReg = 0 ;
 
 /* Highest TM location emitted so far
    For use in conjunction with emitSkip,
@@ -37,93 +40,213 @@ static int emitLoc = 0 ;
 static int highEmitLoc = 0;
 // FIM GERA CODIGO
 %}
+
+
 %union{
 	int inteiro;
 	char *cadeia;
 }
-%token VAR INTEIRO ESCREVA MAIN NUM
-%token PLUS MINUS TIMES DIVIDE
-%type<inteiro> exp NUM
-%token <cadeia> ID
+
+%token READ WRITE DO WHILE RETURN QUIT
+%token<inteiro> GT GE LT LE NE EQ
+
+%token<cadeia> ID
+%token<inteiro> NUM 
+%type<inteiro> factor mulop term addop relop exp
+%type<inteiro> stmt_sequence statement
+%type<inteiro> repeat_stmt assign_stmt read_stmt write_stmt
+
 %%
-programa:	declaracoes '{' lista_cmds '}'
-	{
-		printf("\nSintaxe ok.\n");
+
+input   
+        :  /* empty */
+        | input line {
+                printf("\nSintaxe ok.\n");
 		if (erroSemantico) {
 		  printf("\nErro semantico: esqueceu de declarar alguma variavel que usou...");
 		} else {
 		  printf("\nSemantica ok: se variaveis usadas, elas foram declaradas ok.\n");
-		}		
-
-	}
-;
-declaracoes: VAR linhas_decl		{;}
-;
-linhas_decl: linha_decl			{;}
-		| linha_decl linhas_decl	{;}
-;
-linha_decl: lista_id ':' INTEIRO ';'		{;}
-;
-lista_id: ID
-	{
-		//printf("declarando id\n");
-		colocaSimb($1,"tipo_int","variavel","nao",proxLocMemVar++);
-	}
-	| ID ',' lista_id
-	{
-		//printf("declarando id\n");
-		colocaSimb($1,"tipo_int","variavel","nao",proxLocMemVar++);
-	}
-;
-lista_cmds:	cmd ';'				{;}
-		| cmd ';' lista_cmds		{;}
-;
-cmd:		cmd_saida			{;}
-		| cmd_atribuicao		{;}
-;
-cmd_saida:	ESCREVA '(' exp ')'
-	{
-		/* generate code for expression to write */
-//		cGen(tree->child[0]);
-		/* now output it */
-		emitRO("OUT",ac,0,0,"escreve ac");
-
-	}
-;
-cmd_atribuicao: ID '=' exp
-	{
-		locMemId = recuperaLocMemId($1);
-		emitRM("ST",ac,locMemId,gp,"atribuicao: armazena valor");
-	}
-;
-exp:		
-	exp exp PLUS { $$=$1+$2; 	
-	  printf("Está somando\n")
-	  //corrigir tabela de simbolo para array estatico
-	  emitRM("ADD",ac,$1,$2,"add numbers");
-	}
-	| exp exp MINUS { $$=$1-$2; }
-	| exp exp TIMES { $$=$1*$2; }
-	| exp exp DIVIDE { $$=$1/$2; }
-	| NUM
-	{
-		emitRM("LDC",ac,$1,0,"carrega constante em ac");
-		$$ = $1;
-		printf("%d\n", $1);
-	}
-	|	ID
-	{
-		if (!constaTabSimb($1)) {
-		  erroSemantico=1;
-		} else {
-		  locMemId = recuperaLocMemId($1);
-		  emitRM("LD",ac,locMemId,gp,"carrega valor de id em ac");
-		  $$ = locMemId;
 		}
-	}
-	
-;
+        }
+        ;
+
+line
+        :    
+        | '{' program '}'
+        ;
+
+program
+        : stmt_sequence
+        ;
+
+stmt_sequence
+        : statement                      
+        | stmt_sequence statement { $$ = $1; }
+        ;
+
+statement
+        : repeat_stmt  ';'  
+        | assign_stmt  ';'
+        | read_stmt    ';'
+        | write_stmt   ';'
+        ;
+
+repeat_stmt
+        : DO '&' stmt_sequence '&' WHILE '(' exp relop exp ')' {
+                int program_counter = $3;
+-
+		int reg = recuperaProxReg();
+                emitRO("SUB", reg, $7, $9, "subtract numbers");
+                int program_address = emitLoc;
+                switch ($8) {
+                        case 0:
+                        // $7 > $9
+                        emitRM("JGT", reg, program_counter, gp, "jump if gt");
+                        break;
+                        case 1:
+                        // $7 >= $9
+                        emitRM("JGE", reg, program_counter, gp, "jump if ge");
+                        break;
+                        case 2:
+                        // $7 < $9
+                        emitRM("JLT", reg, program_counter, gp, "jump if lt");
+                        break;
+                        case 3:
+                        // $7 <= $9
+                        emitRM("JLE", reg, program_counter, gp, "jump if le");
+                        break;
+                        case 4:
+                        // $7 != $9
+                        emitRM("JNE", reg, program_counter, gp, "jump if ne");
+                        break;
+                        case 5:
+                        // $7 == $9
+                        emitRM("JEQ", reg, program_counter, gp, "jump if eq");
+                        break;
+                        default:
+                        // does nothing
+                        break;
+                }
+                $$ = program_address;
+        }
+        ;
+
+relop
+		: GT { $$ = 0; } //>
+		| GE { $$ = 1; } //>=
+		| LT { $$ = 2; } //<
+		| LE { $$ = 3; } //<=
+		| NE { $$ = 4; } //!=
+		| EQ { $$ = 5; } //==
+		;
+
+assign_stmt
+        : ID '=' exp {
+			colocaSimb($1,"tipo_int","variavel","nao",proxLocMemVar++);
+			locMemId = recuperaLocMemId($1);
+			emitRM("ST",$3,locMemId*4,gp,"atribuicao: armazena valor");
+                        printf("/nASSIGN STATEMENT %d/n", emitLoc);
+            $$ = emitLoc;
+        }
+        ;
+
+
+read_stmt
+        : READ ID{
+		colocaSimb($2,"tipo_int","variavel","nao",proxLocMemVar++);
+                int reg = recuperaProxReg();
+		emitRO("IN",reg,0,0,"lê ac");
+                int program_counter = emitLoc;
+		locMemId = recuperaLocMemId($2);
+		emitRM("ST",$2,locMemId*4,gp,"atribuicao: armazena valor");
+                $$ = program_counter;
+        }
+        ;
+
+write_stmt
+        : WRITE exp {
+		emitRO("OUT",$2,0,0,"escreve ac");
+                printf("/n WRITE%d/n", emitLoc);
+                $$ = emitLoc;
+        }
+        ;
+
+exp
+        : exp addop term {
+                int reg = recuperaProxReg();
+                switch ($2) {
+                        case 0:
+                        emitRO("ADD",reg,$1,$3,"add numbers");
+                        break;
+                        case 1:
+                        emitRO("SUB",reg,$1,$3,"subtract numbers");
+                        break;
+                        default:
+                        break;
+                }
+
+                $$ = reg;
+        }
+        | term
+        ;
+
+addop
+        : '+' { $$ = 0; }
+        | '-' { $$ = 1; }
+        ;
+
+term
+        : term mulop factor {
+                int reg = recuperaProxReg();
+                switch ($2) {
+                        case 0:
+                        emitRO("MUL",reg,$1,$3,"multiply numbers");
+                        break;
+                        case 1:
+                        emitRO("DIV",reg,$1,$3,"divide numbers");
+                        break;
+                        default:
+                        break;
+                }
+
+                $$ = reg;
+        }
+        | factor
+        ;
+
+mulop
+        : '*' { $$ = 0; }
+        | '/' { $$ = 1; }
+        ;
+
+
+factor  
+        : '(' exp ')' { 
+			int val = (recuperaProxReg()+4) % 6;
+			$$ = val+1;
+		 } 
+        | NUM  {
+		int reg = recuperaProxReg();
+		emitRM("LDC",reg,$1,0,"carrega constante em ac");
+		$$ = reg;
+        }
+        | ID {
+			if (!constaTabSimb($1)) {
+				erroSemantico=1;
+			} else {
+				locMemId = recuperaLocMemId($1);
+				int reg = recuperaProxReg();
+				emitRM("LD",reg,locMemId*4,gp,"carrega valor de id em ac");
+
+				printf("LOC: %d\n", locMemId);
+				$$ = reg;
+				
+			}
+        }
+        ;
+
 %%
+
 // SEMANTICO
 regTabSimb *colocaSimb(char *nomeSimb, char *tipoSimb, char *naturezaSimb, char *usadoSimb,int loc){
 	regTabSimb *ptr;
@@ -181,6 +304,11 @@ int recuperaLocMemId(char *nomeSimb) {
 	for (ptr=tabSimb; ptr!=(regTabSimb *)0; ptr=(regTabSimb *)ptr->prox)
 	  if (strcmp(ptr->nome,nomeSimb)==0) return ptr->locMem;
 	return -1;
+}
+
+int recuperaProxReg() {
+	proxReg= (proxReg+1)%6;
+	return proxReg+1;
 }
 // FIM GERA CODIGO
 

@@ -62,7 +62,7 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 2 "sintatico.y" /* yacc.c:339  */
+#line 3 "sintatico.y" /* yacc.c:339  */
 
 #include <stdio.h>
 #include "code.h"
@@ -81,6 +81,7 @@ struct regTabSimb {
 	int locMem;
 	struct regTabSimb *prox; /* ponteiro */
 };
+
 typedef struct regTabSimb regTabSimb;
 regTabSimb *tabSimb = (regTabSimb *)0;
 regTabSimb *colocaSimb();
@@ -94,6 +95,7 @@ int locMemId = 0; /* para recuperacao na TS */
 
 /* TM location number for current instruction emission */
 static int emitLoc = 0 ;
+static int proxReg = 0 ;
 
 /* Highest TM location emitted so far
    For use in conjunction with emitSkip,
@@ -101,7 +103,7 @@ static int emitLoc = 0 ;
 static int highEmitLoc = 0;
 // FIM GERA CODIGO
 
-#line 105 "sintatico.tab.c" /* yacc.c:339  */
+#line 107 "sintatico.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -136,16 +138,20 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    VAR = 258,
-    INTEIRO = 259,
-    ESCREVA = 260,
-    MAIN = 261,
-    NUM = 262,
-    PLUS = 263,
-    MINUS = 264,
-    TIMES = 265,
-    DIVIDE = 266,
-    ID = 267
+    READ = 258,
+    WRITE = 259,
+    DO = 260,
+    WHILE = 261,
+    RETURN = 262,
+    QUIT = 263,
+    GT = 264,
+    GE = 265,
+    LT = 266,
+    LE = 267,
+    NE = 268,
+    EQ = 269,
+    ID = 270,
+    NUM = 271
   };
 #endif
 
@@ -154,12 +160,12 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 40 "sintatico.y" /* yacc.c:355  */
+#line 45 "sintatico.y" /* yacc.c:355  */
 
 	int inteiro;
 	char *cadeia;
 
-#line 163 "sintatico.tab.c" /* yacc.c:355  */
+#line 169 "sintatico.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -176,7 +182,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 180 "sintatico.tab.c" /* yacc.c:358  */
+#line 186 "sintatico.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -416,23 +422,23 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  8
+#define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   33
+#define YYLAST   52
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  21
+#define YYNTOKENS  28
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  11
+#define YYNNTS  16
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  17
+#define YYNRULES  33
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  34
+#define YYNSTATES  56
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   267
+#define YYMAXUTOK   271
 
 #define YYTRANSLATE(YYX)                                                \
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -444,16 +450,16 @@ static const yytype_uint8 yytranslate[] =
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      18,    19,     2,     2,    17,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,    15,    16,
-       2,    20,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,    20,     2,
+      21,    22,    26,    24,     2,    25,     2,    27,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    19,
+       2,    23,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,    13,     2,    14,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,    17,     2,    18,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -467,15 +473,18 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    12
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
+      15,    16
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    49,    49,    60,    62,    63,    65,    67,    72,    78,
-      79,    81,    82,    84,    93,   100,   106,   115
+       0,    61,    61,    63,    73,    75,    79,    83,    84,    88,
+      89,    90,    91,    95,   135,   136,   137,   138,   139,   140,
+     144,   155,   167,   175,   190,   194,   195,   199,   214,   218,
+     219,   224,   228,   233
 };
 #endif
 
@@ -484,11 +493,12 @@ static const yytype_uint8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "VAR", "INTEIRO", "ESCREVA", "MAIN",
-  "NUM", "PLUS", "MINUS", "TIMES", "DIVIDE", "ID", "'{'", "'}'", "':'",
-  "';'", "','", "'('", "')'", "'='", "$accept", "programa", "declaracoes",
-  "linhas_decl", "linha_decl", "lista_id", "lista_cmds", "cmd",
-  "cmd_saida", "cmd_atribuicao", "exp", YY_NULLPTR
+  "$end", "error", "$undefined", "READ", "WRITE", "DO", "WHILE", "RETURN",
+  "QUIT", "GT", "GE", "LT", "LE", "NE", "EQ", "ID", "NUM", "'{'", "'}'",
+  "';'", "'&'", "'('", "')'", "'='", "'+'", "'-'", "'*'", "'/'", "$accept",
+  "input", "line", "program", "stmt_sequence", "statement", "repeat_stmt",
+  "relop", "assign_stmt", "read_stmt", "write_stmt", "exp", "addop",
+  "term", "mulop", "factor", YY_NULLPTR
 };
 #endif
 
@@ -498,15 +508,15 @@ static const char *const yytname[] =
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   123,   125,    58,    59,    44,    40,    41,
-      61
+     265,   266,   267,   268,   269,   270,   271,   123,   125,    59,
+      38,    40,    41,    61,    43,    45,    42,    47
 };
 # endif
 
-#define YYPACT_NINF -12
+#define YYPACT_NINF -20
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-12)))
+  (!!((Yystate) == (-20)))
 
 #define YYTABLE_NINF -1
 
@@ -517,10 +527,12 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       3,     1,    14,     2,    -1,   -12,     1,     4,   -12,    -4,
-       1,   -12,    13,     0,     5,     6,     7,   -12,   -12,   -12,
-       8,    -3,    -3,   -12,    -4,   -12,   -12,   -12,    -7,    -3,
-     -12,   -12,    -5,   -12
+     -20,     6,   -20,     5,   -20,    -8,    -4,    -7,    -5,    13,
+       5,   -20,     2,    22,    23,    24,   -20,   -20,   -20,    -4,
+       3,   -11,   -20,     5,    -4,   -20,   -20,   -20,   -20,   -20,
+     -20,     0,   -20,   -20,    -4,   -20,   -20,    -4,    -1,     3,
+     -20,   -11,   -20,    38,    25,    -4,    26,   -20,   -20,   -20,
+     -20,   -20,   -20,    -4,     8,   -20
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -528,24 +540,26 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     0,     0,     0,     7,     3,     4,     0,     1,     0,
-       0,     5,     0,     0,     0,     0,     0,    11,    12,     8,
-       0,     0,     0,     2,     9,     6,    15,    16,     0,    14,
-      10,    13,     0,    17
+       2,     0,     1,     0,     3,     0,     0,     0,     0,     0,
+       6,     7,     0,     0,     0,     0,    21,    33,    32,     0,
+      22,    24,    28,     0,     0,     5,     8,     9,    10,    11,
+      12,     0,    25,    26,     0,    29,    30,     0,     0,    20,
+      31,    23,    27,     0,     0,     0,     0,    14,    15,    16,
+      17,    18,    19,     0,     0,    13
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -12,   -12,   -12,    15,   -12,    12,     9,   -12,   -12,   -12,
-     -11
+     -20,   -20,   -20,   -20,    29,    -9,   -20,   -20,   -20,   -20,
+     -20,   -19,   -20,    11,   -20,    10
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2,     3,     5,     6,     7,    15,    16,    17,    18,
-      32
+      -1,     1,     4,     9,    10,    11,    12,    53,    13,    14,
+      15,    20,    34,    21,    37,    22
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -553,42 +567,52 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      26,    13,    26,    33,    26,    27,     1,    27,    14,    27,
-      28,    29,    31,     4,     8,     9,    10,    20,    21,    12,
-      23,    11,    19,    24,    25,    22,     0,     0,     0,     0,
-       0,     0,     0,    30
+      31,    26,     5,     6,     7,    39,     2,    16,     5,     6,
+       7,    17,    18,    23,     8,    35,    36,    19,    24,    43,
+       8,    27,    40,     3,    32,    33,    46,    32,    33,    26,
+      55,    25,    32,    33,    54,    47,    48,    49,    50,    51,
+      52,    28,    29,    30,    44,    41,    45,    42,     0,     0,
+      32,    33,    38
 };
 
 static const yytype_int8 yycheck[] =
 {
-       7,     5,     7,     8,     7,    12,     3,    12,    12,    12,
-      21,    22,    19,    12,     0,    13,    17,     4,    18,    15,
-      14,     6,    10,    16,    16,    20,    -1,    -1,    -1,    -1,
-      -1,    -1,    -1,    24
+      19,    10,     3,     4,     5,    24,     0,    15,     3,     4,
+       5,    15,    16,    20,    15,    26,    27,    21,    23,    20,
+      15,    19,    22,    17,    24,    25,    45,    24,    25,    38,
+      22,    18,    24,    25,    53,     9,    10,    11,    12,    13,
+      14,    19,    19,    19,     6,    34,    21,    37,    -1,    -1,
+      24,    25,    23
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     3,    22,    23,    12,    24,    25,    26,     0,    13,
-      17,    24,    15,     5,    12,    27,    28,    29,    30,    26,
-       4,    18,    20,    14,    16,    16,     7,    12,    31,    31,
-      27,    19,    31,     8
+       0,    29,     0,    17,    30,     3,     4,     5,    15,    31,
+      32,    33,    34,    36,    37,    38,    15,    15,    16,    21,
+      39,    41,    43,    20,    23,    18,    33,    19,    19,    19,
+      19,    39,    24,    25,    40,    26,    27,    42,    32,    39,
+      22,    41,    43,    20,     6,    21,    39,     9,    10,    11,
+      12,    13,    14,    35,    39,    22
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    21,    22,    23,    24,    24,    25,    26,    26,    27,
-      27,    28,    28,    29,    30,    31,    31,    31
+       0,    28,    29,    29,    30,    30,    31,    32,    32,    33,
+      33,    33,    33,    34,    35,    35,    35,    35,    35,    35,
+      36,    37,    38,    39,    39,    40,    40,    41,    41,    42,
+      42,    43,    43,    43
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     4,     2,     1,     2,     4,     1,     3,     2,
-       3,     1,     1,     4,     3,     1,     1,     3
+       0,     2,     0,     2,     0,     3,     1,     1,     2,     2,
+       2,     2,     2,    10,     1,     1,     1,     1,     1,     1,
+       3,     2,     2,     3,     1,     1,     1,     3,     1,     1,
+       1,     3,     1,     1
 };
 
 
@@ -1264,138 +1288,242 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 2:
-#line 50 "sintatico.y" /* yacc.c:1646  */
+        case 3:
+#line 63 "sintatico.y" /* yacc.c:1646  */
     {
-		printf("\nSintaxe ok.\n");
+                printf("\nSintaxe ok.\n");
 		if (erroSemantico) {
 		  printf("\nErro semantico: esqueceu de declarar alguma variavel que usou...");
 		} else {
 		  printf("\nSemantica ok: se variaveis usadas, elas foram declaradas ok.\n");
-		}		
-
-	}
-#line 1279 "sintatico.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 3:
-#line 60 "sintatico.y" /* yacc.c:1646  */
-    {;}
-#line 1285 "sintatico.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 4:
-#line 62 "sintatico.y" /* yacc.c:1646  */
-    {;}
-#line 1291 "sintatico.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 5:
-#line 63 "sintatico.y" /* yacc.c:1646  */
-    {;}
-#line 1297 "sintatico.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 6:
-#line 65 "sintatico.y" /* yacc.c:1646  */
-    {;}
-#line 1303 "sintatico.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 7:
-#line 68 "sintatico.y" /* yacc.c:1646  */
-    {
-		//printf("declarando id\n");
-		colocaSimb((yyvsp[0].cadeia),"tipo_int","variavel","nao",proxLocMemVar++);
-	}
-#line 1312 "sintatico.tab.c" /* yacc.c:1646  */
+		}
+        }
+#line 1302 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 73 "sintatico.y" /* yacc.c:1646  */
-    {
-		//printf("declarando id\n");
-		colocaSimb((yyvsp[-2].cadeia),"tipo_int","variavel","nao",proxLocMemVar++);
-	}
-#line 1321 "sintatico.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 9:
-#line 78 "sintatico.y" /* yacc.c:1646  */
-    {;}
-#line 1327 "sintatico.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 10:
-#line 79 "sintatico.y" /* yacc.c:1646  */
-    {;}
-#line 1333 "sintatico.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 11:
-#line 81 "sintatico.y" /* yacc.c:1646  */
-    {;}
-#line 1339 "sintatico.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 12:
-#line 82 "sintatico.y" /* yacc.c:1646  */
-    {;}
-#line 1345 "sintatico.tab.c" /* yacc.c:1646  */
+#line 84 "sintatico.y" /* yacc.c:1646  */
+    { (yyval.inteiro) = (yyvsp[-1].inteiro); }
+#line 1308 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 85 "sintatico.y" /* yacc.c:1646  */
+#line 95 "sintatico.y" /* yacc.c:1646  */
     {
-		/* generate code for expression to write */
-//		cGen(tree->child[0]);
-		/* now output it */
-		emitRO("OUT",ac,0,0,"escreve ac");
+                int program_counter = (yyvsp[-7].inteiro);
 
-	}
-#line 1357 "sintatico.tab.c" /* yacc.c:1646  */
+		int reg = recuperaProxReg();
+                emitRO("SUB", reg, (yyvsp[-3].inteiro), (yyvsp[-1].inteiro), "subtract numbers");
+                int program_address = emitLoc;
+                switch ((yyvsp[-2].inteiro)) {
+                        case 0:
+                        // $7 > $9
+                        emitRM("JGT", reg, program_counter, gp, "jump if gt");
+                        break;
+                        case 1:
+                        // $7 >= $9
+                        emitRM("JGE", reg, program_counter, gp, "jump if ge");
+                        break;
+                        case 2:
+                        // $7 < $9
+                        emitRM("JLT", reg, program_counter, gp, "jump if lt");
+                        break;
+                        case 3:
+                        // $7 <= $9
+                        emitRM("JLE", reg, program_counter, gp, "jump if le");
+                        break;
+                        case 4:
+                        // $7 != $9
+                        emitRM("JNE", reg, program_counter, gp, "jump if ne");
+                        break;
+                        case 5:
+                        // $7 == $9
+                        emitRM("JEQ", reg, program_counter, gp, "jump if eq");
+                        break;
+                        default:
+                        // does nothing
+                        break;
+                }
+                (yyval.inteiro) = program_address;
+        }
+#line 1350 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 94 "sintatico.y" /* yacc.c:1646  */
-    {
-		locMemId = recuperaLocMemId((yyvsp[-2].cadeia));
-		emitRM("ST",ac,locMemId,gp,"atribuicao: armazena valor");
-	}
-#line 1366 "sintatico.tab.c" /* yacc.c:1646  */
+#line 135 "sintatico.y" /* yacc.c:1646  */
+    { (yyval.inteiro) = 0; }
+#line 1356 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 101 "sintatico.y" /* yacc.c:1646  */
-    {
-		emitRM("LDC",ac,(yyvsp[0].inteiro),0,"carrega constante em ac");
-		(yyval.inteiro) = (yyvsp[0].inteiro);
-		printf("%d\n", (yyvsp[0].inteiro));
-	}
-#line 1376 "sintatico.tab.c" /* yacc.c:1646  */
+#line 136 "sintatico.y" /* yacc.c:1646  */
+    { (yyval.inteiro) = 1; }
+#line 1362 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 107 "sintatico.y" /* yacc.c:1646  */
-    {
-		if (!constaTabSimb((yyvsp[0].cadeia))) {
-		  erroSemantico=1;
-		} else {
-		  locMemId = recuperaLocMemId((yyvsp[0].cadeia));
-		  emitRM("LD",ac,locMemId,gp,"carrega valor de id em ac");
-		}
-	}
-#line 1389 "sintatico.tab.c" /* yacc.c:1646  */
+#line 137 "sintatico.y" /* yacc.c:1646  */
+    { (yyval.inteiro) = 2; }
+#line 1368 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 115 "sintatico.y" /* yacc.c:1646  */
-    { (yyval.inteiro)=(yyvsp[-2].inteiro)+(yyvsp[-1].inteiro); }
-#line 1395 "sintatico.tab.c" /* yacc.c:1646  */
+#line 138 "sintatico.y" /* yacc.c:1646  */
+    { (yyval.inteiro) = 3; }
+#line 1374 "sintatico.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 18:
+#line 139 "sintatico.y" /* yacc.c:1646  */
+    { (yyval.inteiro) = 4; }
+#line 1380 "sintatico.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 19:
+#line 140 "sintatico.y" /* yacc.c:1646  */
+    { (yyval.inteiro) = 5; }
+#line 1386 "sintatico.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 20:
+#line 144 "sintatico.y" /* yacc.c:1646  */
+    {
+			colocaSimb((yyvsp[-2].cadeia),"tipo_int","variavel","nao",proxLocMemVar++);
+			locMemId = recuperaLocMemId((yyvsp[-2].cadeia));
+			emitRM("ST",(yyvsp[0].inteiro),locMemId*4,gp,"atribuicao: armazena valor");
+                        printf("/nASSIGN STATEMENT %d/n", emitLoc);
+            (yyval.inteiro) = emitLoc;
+        }
+#line 1398 "sintatico.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 21:
+#line 155 "sintatico.y" /* yacc.c:1646  */
+    {
+		colocaSimb((yyvsp[0].cadeia),"tipo_int","variavel","nao",proxLocMemVar++);
+                int reg = recuperaProxReg();
+		emitRO("IN",reg,0,0,"lê ac");
+                int program_counter = emitLoc;
+		locMemId = recuperaLocMemId((yyvsp[0].cadeia));
+		emitRM("ST",(yyvsp[0].cadeia),locMemId*4,gp,"atribuicao: armazena valor");
+                (yyval.inteiro) = program_counter;
+        }
+#line 1412 "sintatico.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 22:
+#line 167 "sintatico.y" /* yacc.c:1646  */
+    {
+		emitRO("OUT",(yyvsp[0].inteiro),0,0,"escreve ac");
+                printf("/n WRITE%d/n", emitLoc);
+                (yyval.inteiro) = emitLoc;
+        }
+#line 1422 "sintatico.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 23:
+#line 175 "sintatico.y" /* yacc.c:1646  */
+    {
+                int reg = recuperaProxReg();
+                switch ((yyvsp[-1].inteiro)) {
+                        case 0:
+                        emitRO("ADD",reg,(yyvsp[-2].inteiro),(yyvsp[0].inteiro),"add numbers");
+                        break;
+                        case 1:
+                        emitRO("SUB",reg,(yyvsp[-2].inteiro),(yyvsp[0].inteiro),"subtract numbers");
+                        break;
+                        default:
+                        break;
+                }
+
+                (yyval.inteiro) = reg;
+        }
+#line 1442 "sintatico.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 25:
+#line 194 "sintatico.y" /* yacc.c:1646  */
+    { (yyval.inteiro) = 0; }
+#line 1448 "sintatico.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 26:
+#line 195 "sintatico.y" /* yacc.c:1646  */
+    { (yyval.inteiro) = 1; }
+#line 1454 "sintatico.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 27:
+#line 199 "sintatico.y" /* yacc.c:1646  */
+    {
+                int reg = recuperaProxReg();
+                switch ((yyvsp[-1].inteiro)) {
+                        case 0:
+                        emitRO("MUL",reg,(yyvsp[-2].inteiro),(yyvsp[0].inteiro),"multiply numbers");
+                        break;
+                        case 1:
+                        emitRO("DIV",reg,(yyvsp[-2].inteiro),(yyvsp[0].inteiro),"divide numbers");
+                        break;
+                        default:
+                        break;
+                }
+
+                (yyval.inteiro) = reg;
+        }
+#line 1474 "sintatico.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 29:
+#line 218 "sintatico.y" /* yacc.c:1646  */
+    { (yyval.inteiro) = 0; }
+#line 1480 "sintatico.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 30:
+#line 219 "sintatico.y" /* yacc.c:1646  */
+    { (yyval.inteiro) = 1; }
+#line 1486 "sintatico.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 31:
+#line 224 "sintatico.y" /* yacc.c:1646  */
+    { 
+			int val = (recuperaProxReg()+4) % 6;
+			(yyval.inteiro) = val+1;
+		 }
+#line 1495 "sintatico.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 32:
+#line 228 "sintatico.y" /* yacc.c:1646  */
+    {
+		int reg = recuperaProxReg();
+		emitRM("LDC",reg,(yyvsp[0].inteiro),0,"carrega constante em ac");
+		(yyval.inteiro) = reg;
+        }
+#line 1505 "sintatico.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 33:
+#line 233 "sintatico.y" /* yacc.c:1646  */
+    {
+			if (!constaTabSimb((yyvsp[0].cadeia))) {
+				erroSemantico=1;
+			} else {
+				locMemId = recuperaLocMemId((yyvsp[0].cadeia));
+				int reg = recuperaProxReg();
+				emitRM("LD",reg,locMemId*4,gp,"carrega valor de id em ac");
+
+				printf("LOC: %d\n", locMemId);
+				(yyval.inteiro) = reg;
+				
+			}
+        }
+#line 1523 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1399 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1527 "sintatico.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1623,7 +1751,8 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 120 "sintatico.y" /* yacc.c:1906  */
+#line 248 "sintatico.y" /* yacc.c:1906  */
+
 
 // SEMANTICO
 regTabSimb *colocaSimb(char *nomeSimb, char *tipoSimb, char *naturezaSimb, char *usadoSimb,int loc){
@@ -1682,6 +1811,11 @@ int recuperaLocMemId(char *nomeSimb) {
 	for (ptr=tabSimb; ptr!=(regTabSimb *)0; ptr=(regTabSimb *)ptr->prox)
 	  if (strcmp(ptr->nome,nomeSimb)==0) return ptr->locMem;
 	return -1;
+}
+
+int recuperaProxReg() {
+	proxReg= (proxReg+1)%6;
+	return proxReg+1;
 }
 // FIM GERA CODIGO
 
